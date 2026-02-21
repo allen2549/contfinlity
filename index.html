@@ -657,17 +657,30 @@ function showTutorialStep() {
       const pad = 6;
       hl.style.cssText = `top:${r.top - pad}px;left:${r.left - pad}px;width:${r.width + pad*2}px;height:${r.height + pad*2}px;`;
 
-      // Posiciona balão
+      // Posiciona balão — garante que nunca sai da viewport
       balloon.className = `tutorial-balloon ${step.arrow}`;
-      if(step.position === 'below') {
+      const balloonH = 180; // altura estimada do balão
+      const spaceBelow = window.innerHeight - r.bottom - 18;
+      const spaceAbove = r.top - 18;
+
+      if(step.position === 'below' && spaceBelow >= balloonH) {
         balloon.style.top = (r.bottom + 18) + 'px';
         balloon.style.bottom = '';
-      } else {
+      } else if(spaceAbove >= balloonH) {
+        balloon.className = 'tutorial-balloon arrow-bottom';
         balloon.style.top = '';
         balloon.style.bottom = (window.innerHeight - r.top + 18) + 'px';
+      } else {
+        // Sem espaço suficiente em cima nem embaixo — centraliza na tela
+        balloon.className = 'tutorial-balloon';
+        balloon.style.top = '50%';
+        balloon.style.bottom = '';
+        balloon.style.transform = 'translateY(-50%)';
       }
+
       const bLeft = Math.min(r.left, window.innerWidth - 300);
       balloon.style.left = Math.max(12, bLeft) + 'px';
+      if(step.position === 'below' && spaceBelow >= balloonH) balloon.style.transform = '';
     }
 
     // Conteúdo
