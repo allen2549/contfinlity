@@ -230,7 +230,7 @@
       <div class="header-logo-name" id="header-app-name">Awadev<span>Fin</span></div>
     </div>
     <div class="header-actions">
-      <input type="file" id="csv-upload" accept=".csv" style="display:none" onchange="importCSV(event)">
+      <input type="file" id="csv-upload" accept=".json" style="display:none" onchange="importCSV(event)">
       <div class="icon-btn" onclick="document.getElementById('csv-upload').click()">📥</div>
       <div class="avatar" id="header-avatar" onclick="openConfigModal()">LE</div>
     </div>
@@ -1167,32 +1167,64 @@ function submitTransaction() {
 }
 
 function exportCSV() {
-  if(!transactions.length) return showToast('⚠️ Nada para exportar!');
-  let csv = "id,type,desc,amount,date,cat,cardId\n";
-  transactions.forEach(t => csv += `${t.id},${t.type},"${t.desc.replace(/"/g, '""')}",${t.amount},${t.date},${t.cat},${t.cardId||''}\n`);
-  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
-  a.download = `awadevfin_backup.csv`; a.click(); showToast('✅ Exportado!');
+  const backup = {
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    profile: appProfile,
+    cats: myCats,
+    cards: myCards,
+    transactions: transactions
+  };
+  const json = JSON.stringify(backup, null, 2);
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([json], { type: 'application/json' }));
+  a.download = `awadevfin_backup_${todayStr()}.json`;
+  a.click();
+  showToast('✅ Backup completo exportado!');
 }
 
 function importCSV(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  e.target.value = '';
+
   const reader = new FileReader();
   reader.onload = function(evt) {
-    const lines = evt.target.result.split('\n');
-    if(lines.length > 1) {
-      for(let i=1; i<lines.length; i++) {
-        const m = lines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
-        if(m && m.length>=6 && !transactions.find(t=>t.id===parseInt(m[0]))) {
-          transactions.push({ 
-            id: parseInt(m[0])||nextTxId++, type: m[1], 
-            desc: m[2].replace(/(^"|"$)/g,'').replace(/""/g,'"'), 
-            amount: parseFloat(m[3]), date: m[4], cat: m[5], cardId: m[6] || ''
-          });
-        }
+    try {
+      const data = JSON.parse(evt.target.result);
+
+      // Detecta se é backup novo (JSON completo) ou CSV legado
+      if (data.version && data.transactions !== undefined) {
+        // ── Backup completo JSON ──
+        const confirmar = confirm(
+          `Importar backup de ${new Date(data.exportedAt).toLocaleString('pt-BR')}?\n\nIsso vai SUBSTITUIR todos os seus dados atuais (perfil, cartões, categorias e lançamentos).`
+        );
+        if (!confirmar) return;
+
+        if (data.profile)      appProfile   = data.profile;
+        if (data.cats)         myCats       = data.cats;
+        if (data.cards)        myCards      = data.cards;
+        if (data.transactions) transactions = data.transactions;
+
+        nextTxId = transactions.length > 0
+          ? Math.max(...transactions.map(t => t.id)) + 1
+          : 1;
+
+        saveAll();
+        applyProfile();
+        navigateTo(currentPage);
+        showToast('✅ Backup restaurado com sucesso!');
+
+      } else {
+        // ── CSV legado (compatibilidade) ──
+        showToast('⚠️ Formato antigo não suportado. Use um backup .json');
       }
-      nextTxId = Math.max(...transactions.map(t=>t.id)) + 1; saveAll(); navigateTo(currentPage); showToast('✅ Importado!');
+
+    } catch (err) {
+      showToast('❌ Arquivo inválido ou corrompido!');
     }
   };
-  if(e.target.files[0]) reader.readAsText(e.target.files[0]); e.target.value='';
+  reader.readAsText(file);
 }
 
 function showToast(msg) {
