@@ -28,12 +28,83 @@
     --safe-bottom: env(safe-area-inset-bottom, 0px);
   }
 
+  /* ── SISTEMA DE TEMAS ── */
+  body.theme-light {
+    color-scheme: light;
+  }
+  body.theme-dark {
+    color-scheme: dark;
+  }
+  .theme-store-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 0 20px 16px;
+  }
+  .theme-card {
+    border-radius: 16px;
+    border: 2px solid var(--border2);
+    background: var(--bg3);
+    padding: 14px 12px;
+    cursor: pointer;
+    transition: all 0.18s;
+    position: relative;
+    overflow: hidden;
+  }
+  .theme-card:active { transform: scale(0.95); }
+  .theme-card.active-theme {
+    border-color: var(--accent);
+    background: var(--accent-glow);
+  }
+  .theme-card-icon { font-size: 24px; margin-bottom: 6px; }
+  .theme-card-name { font-size: 13px; font-weight: 700; color: var(--text); }
+  .theme-card-desc { font-size: 10px; color: var(--text3); margin-top: 2px; line-height: 1.4; }
+  .theme-card-author { font-size: 9px; color: var(--text3); margin-top: 6px; opacity: 0.7; }
+  .theme-card-badge {
+    position: absolute; top: 8px; right: 8px;
+    background: var(--accent); color: #fff;
+    font-size: 8px; font-weight: 700; padding: 2px 6px;
+    border-radius: 20px; letter-spacing: 0.5px;
+  }
+  .theme-card-preview {
+    display: flex; gap: 3px; margin-top: 8px;
+  }
+  .theme-preview-dot {
+    width: 12px; height: 12px; border-radius: 50%;
+  }
+  .theme-store-url-wrap {
+    display: flex; gap: 8px; padding: 0 20px 12px; align-items: center;
+  }
+  .theme-store-url-input {
+    flex: 1; padding: 10px 12px; background: var(--bg3);
+    border: 1px solid var(--border2); border-radius: 10px;
+    color: var(--text); font-size: 12px; outline: none;
+    font-family: var(--mono);
+  }
+  .theme-store-url-input:focus { border-color: var(--accent); }
+  .theme-store-load-btn {
+    padding: 10px 14px; background: var(--accent); color: #fff;
+    border: none; border-radius: 10px; font-size: 12px;
+    font-weight: 700; cursor: pointer; white-space: nowrap;
+    font-family: var(--font);
+  }
+  .theme-store-load-btn:active { opacity: 0.8; transform: scale(0.96); }
+  .theme-store-status {
+    font-size: 11px; padding: 0 20px 8px;
+    color: var(--text3); min-height: 18px;
+  }
+  .theme-section-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.8px;
+    text-transform: uppercase; color: var(--text3);
+    padding: 12px 20px 8px;
+  }
+
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   html, body { width:100%; height:100%; overflow:hidden; background:var(--bg); color:var(--text); font-family:var(--font); font-size:14px; }
   #app { width:100%; height:100%; display:flex; flex-direction:column; position:relative; overflow:hidden; }
 
   /* HEADER */
-  .header { height:var(--header-h); min-height:var(--header-h); display:flex; align-items:center; justify-content:space-between; padding:0 20px; background:rgba(10,10,15,0.85); backdrop-filter:blur(20px); border-bottom:1px solid var(--border); position:relative; z-index:10; }
+  .header { height:var(--header-h); min-height:var(--header-h); display:flex; align-items:center; justify-content:space-between; padding:0 20px; background:var(--header-bg, rgba(10,10,15,0.85)); backdrop-filter:blur(20px); border-bottom:1px solid var(--border); position:relative; z-index:10; }
   .header-logo { display:flex; align-items:center; gap:8px; }
   .header-logo-dot { width:28px; height:28px; border-radius:8px; background:linear-gradient(135deg, var(--accent), #A78BFA); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#fff; }
   .header-logo-name { font-size:15px; font-weight:700; letter-spacing:-0.3px; }
@@ -47,7 +118,7 @@
   .pages { flex:1; overflow:hidden; position:relative; }
   .page { position:absolute; inset:0; overflow-y:auto; overflow-x:hidden; padding:0 0 calc(var(--nav-h) + var(--safe-bottom) + 16px); opacity:0; pointer-events:none; transform:translateY(12px); transition:opacity 0.25s, transform 0.25s; -webkit-overflow-scrolling:touch; }
   .page.active { opacity:1; pointer-events:all; transform:translateY(0); }
-  .nav { height:calc(var(--nav-h) + var(--safe-bottom)); padding-bottom:var(--safe-bottom); background:rgba(17,17,24,0.95); backdrop-filter:blur(20px); border-top:1px solid var(--border); display:flex; align-items:center; position:relative; z-index:10; }
+  .nav { height:calc(var(--nav-h) + var(--safe-bottom)); padding-bottom:var(--safe-bottom); background:var(--nav-bg, rgba(17,17,24,0.95)); backdrop-filter:blur(20px); border-top:1px solid var(--border); display:flex; align-items:center; position:relative; z-index:10; }
   .nav-item { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; cursor:pointer; padding:8px 0; position:relative; transition:all 0.2s; }
   .nav-icon { font-size:20px; transition:transform 0.2s; }
   .nav-label { font-size:10px; font-weight:500; color:var(--text3); transition:color 0.2s; }
@@ -68,7 +139,7 @@
   .divider { height:1px; background:var(--border); }
 
   /* HOME */
-  .balance-card { margin:16px; padding:24px; border-radius:24px; background:linear-gradient(135deg, #1A1830 0%, #0F0F1A 100%); border:1px solid rgba(124,111,255,0.2); position:relative; overflow:hidden; }
+  .balance-card { margin:16px; padding:24px; border-radius:24px; background:var(--balance-gradient, linear-gradient(135deg, #1A1830 0%, #0F0F1A 100%)); border:1px solid var(--balance-border, rgba(124,111,255,0.2)); position:relative; overflow:hidden; }
   .balance-card::before, .balance-card::after { content:''; position:absolute; border-radius:50%; pointer-events:none; }
   .balance-card::before { top:-60px; right:-40px; width:180px; height:180px; background:radial-gradient(circle, rgba(124,111,255,0.15) 0%, transparent 70%); }
   .balance-card::after { bottom:-50px; left:-20px; width:140px; height:140px; background:radial-gradient(circle, rgba(46,204,138,0.08) 0%, transparent 70%); }
@@ -405,10 +476,11 @@
   <div class="modal-sheet" style="max-height:85vh;">
     <div class="modal-handle"></div>
     <div class="modal-title">Configurações</div>
-    <div class="config-tabs">
+    <div class="config-tabs" style="overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;">
       <div class="config-tab active" onclick="switchConfigTab('profile')">Perfil</div>
       <div class="config-tab" onclick="switchConfigTab('cards')">Cartões</div>
       <div class="config-tab" onclick="switchConfigTab('cats')">Categorias</div>
+      <div class="config-tab" onclick="switchConfigTab('themes')">🎨 Temas</div>
     </div>
 
     <div id="tab-profile" class="config-section active">
@@ -461,6 +533,27 @@
         <button class="submit-btn" style="width:100%;margin:0" onclick="addCategory()">Criar Categoria</button>
       </div>
     </div>
+
+    <!-- ABA: TEMAS -->
+    <div id="tab-themes" class="config-section">
+
+      <div class="theme-store-status" id="theme-store-status" style="padding-top:12px"></div>
+
+      <div class="theme-section-label">✨ Temas disponíveis</div>
+      <div class="theme-store-grid" id="theme-store-grid">
+        <div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--text3);font-size:12px">
+          ⏳ Carregando temas...
+        </div>
+      </div>
+
+      <div style="padding:12px 20px 4px">
+        <button class="submit-btn" style="background:var(--bg3);color:var(--text2);box-shadow:none;border:1px solid var(--border2)" onclick="loadThemeStore()">
+          🔄 Recarregar temas
+        </button>
+      </div>
+
+    </div>
+
   </div>
 </div>
 
@@ -699,6 +792,162 @@ function showTutorialStep() {
 }
 
 // ═══════════════════════════════════════
+// SISTEMA DE TEMAS
+// ═══════════════════════════════════════
+
+let availableThemes = [];
+let activeThemeId = localStorage.getItem('finapp_theme') || 'auto';
+
+// Detecta preferência do sistema
+function getSystemTheme() {
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+// Aplica as variáveis CSS de um tema
+function applyThemeVars(theme) {
+  const root = document.documentElement;
+  const body = document.body;
+
+  // Remove classes de tema anteriores
+  body.classList.remove('theme-dark', 'theme-light');
+
+  // Aplica variáveis CSS
+  Object.entries(theme.vars).forEach(([key, val]) => {
+    if (key === '--meta-theme') {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', val);
+    } else if (key === '--font') {
+      root.style.setProperty(key, val);
+    } else {
+      root.style.setProperty(key, val);
+    }
+  });
+
+  // Aplica fonte customizada (ex: Agibank usa Nunito)
+  if (theme.fontUrl) {
+    let fontLink = document.getElementById('theme-font-link');
+    if (!fontLink) {
+      fontLink = document.createElement('link');
+      fontLink.id = 'theme-font-link';
+      fontLink.rel = 'stylesheet';
+      document.head.appendChild(fontLink);
+    }
+    fontLink.href = theme.fontUrl;
+  }
+
+  // Classe para color-scheme
+  const isDark = (theme.vars['--bg'] || '#000').replace(/\s/g,'').toLowerCase();
+  const brightness = isDark.startsWith('#') ? parseInt(isDark.slice(1,3), 16) : 200;
+  body.classList.add(brightness < 128 ? 'theme-dark' : 'theme-light');
+
+  activeThemeId = theme.id;
+  localStorage.setItem('finapp_theme', theme.id);
+}
+
+// Aplica tema pelo ID (busca na lista carregada)
+function applyThemeById(id) {
+  const theme = availableThemes.find(t => t.id === id);
+  if (!theme) return;
+  applyThemeVars(theme);
+  renderThemeGrid();
+}
+
+// Carrega themes.json de uma URL
+async function loadThemeStore() {
+  const status = document.getElementById('theme-store-status');
+  if (status) { status.textContent = '⏳ Carregando temas...'; status.style.color = 'var(--text3)'; }
+
+  try {
+    const res = await fetch('themes.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    if (!data.themes || !Array.isArray(data.themes)) {
+      throw new Error('themes.json inválido');
+    }
+
+    availableThemes = data.themes;
+    localStorage.setItem('finapp_themes_cache', JSON.stringify(availableThemes));
+
+    if (status) {
+      status.textContent = `✅ ${availableThemes.length} tema(s) disponíve(is)`;
+      status.style.color = 'var(--green)';
+    }
+    renderThemeGrid();
+  } catch (err) {
+    if (status) {
+      status.textContent = `❌ Erro ao carregar themes.json: ${err.message}`;
+      status.style.color = 'var(--red)';
+    }
+  }
+}
+
+// Renderiza a grade de temas
+function renderThemeGrid() {
+  const grid = document.getElementById('theme-store-grid');
+  if (!grid) return;
+
+  if (!availableThemes.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--text3);font-size:12px">Carregue um arquivo themes.json para ver os temas disponíveis.</div>`;
+    return;
+  }
+
+  grid.innerHTML = availableThemes.map(theme => {
+    const isActive = activeThemeId === theme.id;
+    const previewColors = [
+      theme.vars['--accent'] || '#888',
+      theme.vars['--bg2'] || '#fff',
+      theme.vars['--bg3'] || '#eee',
+      theme.vars['--green'] || '#2ECC8A'
+    ];
+
+    return `
+      <div class="theme-card ${isActive ? 'active-theme' : ''}" onclick="applyThemeById('${theme.id}')">
+        ${isActive ? '<div class="theme-card-badge">ATIVO</div>' : ''}
+        <div class="theme-card-icon">${theme.icon || '🎨'}</div>
+        <div class="theme-card-name">${theme.name}</div>
+        <div class="theme-card-desc">${theme.description || ''}</div>
+        <div class="theme-card-preview">
+          ${previewColors.map(c => `<div class="theme-preview-dot" style="background:${c}"></div>`).join('')}
+        </div>
+        <div class="theme-card-author">by ${theme.author || 'Desconhecido'}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// Inicialização dos temas
+function initThemes() {
+  // Tenta restaurar cache local
+  const cached = localStorage.getItem('finapp_themes_cache');
+  const cachedUrl = localStorage.getItem('finapp_themes_url');
+
+  if (cached) {
+    try {
+      availableThemes = JSON.parse(cached);
+    } catch(e) { availableThemes = []; }
+  }
+
+  if (cachedUrl) {
+    const input = document.getElementById('theme-store-url');
+    if (input) input.value = cachedUrl;
+  }
+
+  // Aplica tema salvo ou sistema
+  const savedId = localStorage.getItem('finapp_theme');
+  const targetId = savedId === 'auto' || !savedId ? getSystemTheme() : savedId;
+  const theme = availableThemes.find(t => t.id === targetId);
+  if (theme) applyThemeVars(theme);
+
+  // Escuta mudança de tema do sistema (quando em auto)
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+    if (activeThemeId === 'auto' || activeThemeId === 'dark' || activeThemeId === 'light') {
+      const sysTheme = availableThemes.find(t => t.id === (e.matches ? 'dark' : 'light'));
+      if (sysTheme) applyThemeVars(sysTheme);
+    }
+  });
+}
+
+// ═══════════════════════════════════════
 // INICIALIZAÇÃO VISUAL (PERFIL)
 // ═══════════════════════════════════════
 function applyProfile() {
@@ -725,6 +974,17 @@ function switchConfigTab(tab) {
   document.querySelectorAll('.config-section').forEach(e => e.classList.remove('active'));
   event.target.classList.add('active');
   document.getElementById(`tab-${tab}`).classList.add('active');
+
+  // Ao abrir a aba de temas, renderiza a grade e atualiza status
+  if (tab === 'themes') {
+    renderThemeGrid();
+    const cachedUrl = localStorage.getItem('finapp_themes_url');
+    const status = document.getElementById('theme-store-status');
+    if (availableThemes.length && status) {
+      status.textContent = `✅ ${availableThemes.length} tema(s) disponíve(is). URL: ${cachedUrl || '—'}`;
+      status.style.color = 'var(--green)';
+    }
+  }
 }
 
 function saveProfile() {
@@ -1241,7 +1501,8 @@ function handleModalOverlay(event, modalId) {
     document.getElementById(modalId).classList.remove('open');
   }
 }
-applyProfile(); document.getElementById('tx-date').value = todayStr(); renderHome();
+initThemes(); applyProfile(); document.getElementById('tx-date').value = todayStr(); renderHome();
+
 
 if ('serviceWorker' in navigator) {
   // Construção dinâmica do Manifest baseada nas configs de perfil
